@@ -216,6 +216,8 @@ components:
       title: A single menu item
       type: object
       properties:
+        id:
+          type: integer
         description:
           type: string
         name:

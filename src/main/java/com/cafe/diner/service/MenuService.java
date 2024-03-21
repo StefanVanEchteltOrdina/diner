@@ -12,10 +12,10 @@ public class MenuService {
     private FoodService foodService;
 
     public List<MenuItemDto> all() {
-        List<MenuItemDto> drinkItems = null;
-        List<MenuItemDto> foodItems = null;
+        List<MenuItemDto> drinkItems = drinkService.all();
+        List<MenuItemDto> foodItems = foodService.all();
 
-
+        //TODO: Return combined list
         return null;
     }
 }

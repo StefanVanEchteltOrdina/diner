@@ -1,5 +1,6 @@
 package com.cafe.diner.controller;
 
+import com.cafe.diner.service.OrderService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 @RequestMapping("/api/order")
 public class OrderController {
+
+    private OrderService orderService;
 
     @GetMapping
     public void x() {

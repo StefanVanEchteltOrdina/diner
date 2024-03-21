@@ -1,7 +1,7 @@
 package com.cafe.diner.service;
 
-import com.cafe.diner.controller.dto.OrderDto;
-import com.cafe.diner.domain.Order;
+import com.cafe.diner.domain.OrderModel;
+import org.openapitools.model.Order;
 import com.cafe.diner.repository.OrderRepository;
 import org.springframework.stereotype.Service;
 
@@ -13,15 +13,18 @@ public class OrderService {
 
     private OrderRepository orderRepository;
 
-    public List<OrderDto> getAllOrders() {
+    public List<Order> getAllOrders() {
         return orderRepository.findAll()
                 .stream()
                 .map(this::convert)
                 .collect(Collectors.toList());
     }
 
-    private OrderDto convert(Order order) {
+    private Order convert(OrderModel orderModel) {
         // Todo: uitbreiden met alle velden.
-        return new OrderDto(order.getId());
+
+        Order order =  new Order();
+        order.setId(orderModel.getId());
+        return order;
     }
 }

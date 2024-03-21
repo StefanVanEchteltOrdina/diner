@@ -8,7 +8,7 @@ import lombok.*;
 @Table(name = "orders")
 @AllArgsConstructor
 @NoArgsConstructor
-public class Order {
+public class OrderModel {
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)

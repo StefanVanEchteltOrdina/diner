@@ -17,7 +17,11 @@ import java.util.List;
 public class FoodService {
     private DinerConfig dinerConfig;
 
-    private RestTemplate restTemplate;
+    private RestTemplate restTemplate = new RestTemplate();
+
+    FoodService(final DinerConfig dinerConfig) {
+        this.dinerConfig = dinerConfig;
+    }
 
     public List<MenuItemDto> all() {
         String url = dinerConfig.getKitchenUrl() + "/api/menu";

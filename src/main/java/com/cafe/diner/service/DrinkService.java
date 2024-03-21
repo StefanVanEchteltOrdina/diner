@@ -19,7 +19,11 @@ public class DrinkService {
 
     private DinerConfig dinerConfig;
 
-    private RestTemplate restTemplate;
+    private RestTemplate restTemplate = new RestTemplate();
+
+    DrinkService(final DinerConfig dinerConfig) {
+        this.dinerConfig = dinerConfig;
+    }
 
     public List<MenuItemDto> all() {
         String url = dinerConfig.getBarUrl() + "/api/menu";

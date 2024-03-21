@@ -13,5 +13,6 @@ public class Order {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
+
     // Todo: orderItems en status toevoegen.
 }

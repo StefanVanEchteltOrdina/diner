@@ -1,6 +1,6 @@
 package com.cafe.diner.controller;
 
-import com.cafe.diner.controller.dto.MenuItemDto;
+import org.openapitools.model.MenuItem;
 import com.cafe.diner.service.MenuService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +17,7 @@ public class MenuController {
     private MenuService menuService;
 
     @GetMapping
-    public List<MenuItemDto> all() {
+    public List<MenuItem> all() {
         return menuService.all();
     }
 

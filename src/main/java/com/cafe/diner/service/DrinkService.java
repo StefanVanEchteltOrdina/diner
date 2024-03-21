@@ -1,10 +1,9 @@
 package com.cafe.diner.service;
 
 import com.cafe.diner.config.DinerConfig;
-import com.cafe.diner.controller.dto.MenuItemDto;
-import com.cafe.diner.controller.dto.MenuItemType;
-import com.cafe.diner.domain.MenuItem;
+import com.cafe.diner.external.ExternalMenuItem;
 import lombok.AllArgsConstructor;
+import org.openapitools.model.MenuItem;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -22,15 +21,15 @@ public class DrinkService {
 
     private RestTemplate restTemplate;
 
-    public List<MenuItemDto> all() {
+    public List<MenuItem> all() {
 
         String url = dinerConfig.getBarUrl() + "/api/menu";
 
-        ResponseEntity<List<MenuItem>> response = restTemplate.exchange(
+        ResponseEntity<List<ExternalMenuItem>> response = restTemplate.exchange(
                 url,
                 HttpMethod.GET,
                 null,
-                new ParameterizedTypeReference<List<MenuItem>>() {}
+                new ParameterizedTypeReference<List<ExternalMenuItem>>() {}
         );
 
         if (response.getBody() == null || !response.getStatusCode().is2xxSuccessful()) {
@@ -38,7 +37,15 @@ public class DrinkService {
         }
 
         return response.getBody().stream()
-                .map(m -> new MenuItemDto(m.getId(), m.getDescription(), m.getName(), m.getPrice(), MenuItemType.DRINK))
+                .map(m -> {
+                    MenuItem menuItem = new MenuItem();
+                    menuItem.setId(m.getId());
+                    menuItem.setDescription(m.getDescription());
+                    menuItem.setName(m.getName());
+                    menuItem.setPrice(m.getPrice());
+                    menuItem.setType(MenuItem.TypeEnum.DRINK);
+                    return menuItem;
+                })
                 .toList();
     }
 

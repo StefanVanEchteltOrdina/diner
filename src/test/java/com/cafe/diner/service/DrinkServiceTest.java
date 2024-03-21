@@ -1,9 +1,8 @@
 package com.cafe.diner.service;
 
 import com.cafe.diner.config.DinerConfig;
-import com.cafe.diner.controller.dto.MenuItemDto;
-import com.cafe.diner.controller.dto.MenuItemType;
-import com.cafe.diner.domain.MenuItem;
+import org.openapitools.model.MenuItem;
+import com.cafe.diner.external.ExternalMenuItem;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -36,23 +35,23 @@ class DrinkServiceTest {
     @Test
     void validate_that_drink_menu_is_returned() {
         String url = "localhost:8000/";
-        List<MenuItem> returnData = new ArrayList<>();
-        returnData.add(new MenuItem(1L, "description", "name", 1, 2));
+        List<ExternalMenuItem> returnData = new ArrayList<>();
+        returnData.add(new ExternalMenuItem(1L, "description", "name", 1, 2L));
 
         ResponseEntity callResponse = new ResponseEntity<>(returnData, HttpStatusCode.valueOf(200));
 
         when(dinerConfig.getBarUrl()).thenReturn(url);
-        when(restTemplate.exchange(url + "/api/menu", HttpMethod.GET, null, new ParameterizedTypeReference<List<MenuItem>>() {}))
+        when(restTemplate.exchange(url + "/api/menu", HttpMethod.GET, null, new ParameterizedTypeReference<List<ExternalMenuItem>>() {}))
                 .thenReturn(callResponse);
 
-        List<MenuItemDto> response = drinkService.all();
+        List<MenuItem> response = drinkService.all();
 
-        MenuItemDto item1 = response.get(0);
+        MenuItem item1 = response.get(0);
         assertThat(item1.getId()).isEqualTo(1L);
         assertThat(item1.getDescription()).isEqualTo("description");
         assertThat(item1.getName()).isEqualTo("name");
         assertThat(item1.getPrice()).isEqualTo(2);
-        assertThat(item1.getType()).isEqualTo(MenuItemType.DRINK);
+        assertThat(item1.getType()).isEqualTo(MenuItem.TypeEnum.DRINK);
     }
 
     @Test
@@ -62,10 +61,10 @@ class DrinkServiceTest {
         ResponseEntity callResponse = new ResponseEntity<>(new ArrayList<>(), HttpStatusCode.valueOf(500));
 
         when(dinerConfig.getBarUrl()).thenReturn(url);
-        when(restTemplate.exchange(url + "/api/menu", HttpMethod.GET, null, new ParameterizedTypeReference<List<MenuItem>>() {}))
+        when(restTemplate.exchange(url + "/api/menu", HttpMethod.GET, null, new ParameterizedTypeReference<List<ExternalMenuItem>>() {}))
                 .thenReturn(callResponse);
 
-        List<MenuItemDto> response = drinkService.all();
+        List<MenuItem> response = drinkService.all();
 
         assertThat(response).isEmpty();
     }

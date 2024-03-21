@@ -1,14 +1,14 @@
-package com.cafe.diner.controller.dto;
+package com.cafe.diner.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class MenuItemDto {
+public class MenuItem {
     private Long id;
     private String description;
     private String name;
-    private long price;
-    private MenuItemType type;
+    private int preparationTime;
+    private int price;
 }

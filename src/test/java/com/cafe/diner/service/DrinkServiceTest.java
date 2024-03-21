@@ -57,7 +57,7 @@ class DrinkServiceTest {
 
     @Test
     void validate_that_empty_result_is_returned() {
-        String url = "localhost:8000/";
+        String url = "http://localhost:8000";
 
         ResponseEntity callResponse = new ResponseEntity<>(new ArrayList<>(), HttpStatusCode.valueOf(500));
 

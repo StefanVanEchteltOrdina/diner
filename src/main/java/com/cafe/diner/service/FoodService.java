@@ -4,6 +4,8 @@ import com.cafe.diner.config.DinerConfig;
 import com.cafe.diner.controller.dto.MenuItemDto;
 import com.cafe.diner.controller.dto.MenuItemType;
 import com.cafe.diner.domain.MenuItem;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -14,14 +16,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class FoodService {
+
     private DinerConfig dinerConfig;
-
-    private RestTemplate restTemplate = new RestTemplate();
-
-    FoodService(final DinerConfig dinerConfig) {
-        this.dinerConfig = dinerConfig;
-    }
+    private RestTemplate restTemplate;
 
     public List<MenuItemDto> all() {
         String url = dinerConfig.getKitchenUrl() + "/api/menu";

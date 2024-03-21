@@ -6,18 +6,17 @@ import com.cafe.diner.repository.OrderRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
 
     private OrderRepository orderRepository;
 
-    public List<Order> getAllOrders() {
+    public List<Order> getAll() {
         return orderRepository.findAll()
                 .stream()
                 .map(this::convert)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private Order convert(OrderModel orderModel) {

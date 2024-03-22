@@ -1,9 +1,12 @@
 package com.cafe.diner.service;
 
+import com.cafe.diner.domain.OrderItemModel;
 import com.cafe.diner.domain.OrderModel;
+import com.cafe.diner.repository.OrderItemRepository;
 import lombok.AllArgsConstructor;
 import org.openapitools.model.Order;
 import com.cafe.diner.repository.OrderRepository;
+import org.openapitools.model.OrderItem;
 import org.openapitools.model.RequestedItem;
 import org.openapitools.model.ResponseOrder;
 import org.springframework.http.HttpStatus;
@@ -18,6 +21,7 @@ import java.util.Optional;
 public class OrderService {
 
     private OrderRepository orderRepository;
+    private OrderItemRepository orderItemRepository;
     private DrinkService drinkService;
     private FoodService foodService;
 
@@ -80,13 +84,31 @@ public class OrderService {
         return true;
     }
 
+    private OrderItemModel convertOrderItemToDomain(RequestedItem requestedItem, Long orderId) {
+        OrderItemModel orderItemModel = new OrderItemModel();
+        orderItemModel.setOrderId(orderId);
+        orderItemModel.setProductId(requestedItem.getId());
+        orderItemModel.setName(requestedItem.getName());
+        orderItemModel.setQuantity(requestedItem.getQuantity());
+        orderItemModel.setItemType(requestedItem.getType());
+        orderItemModel.setPrice(1L);
+        return orderItemModel;
+    }
+
+    private OrderItem convertFromOrderItem(OrderItemModel orderItemModel) {
+        OrderItem orderItem = new OrderItem();
+        orderItem.setId(orderItemModel.getId());
+        orderItem.setName(orderItemModel.getName());
+        orderItem.setQuantity(orderItemModel.getQuantity());
+        return orderItem;
+    }
 
     private Order convert(OrderModel orderModel) {
-        // Todo: uitbreiden met alle velden.
-
         Order order =  new Order();
         order.setId(orderModel.getId());
         order.setStatus(orderModel.getStatus());
+        List<OrderItem> orderItems = orderModel.getOrderItems().stream().map(this::convertFromOrderItem).toList();
+        order.setOrderItems(orderItems);
         return order;
     }
 
@@ -113,6 +135,11 @@ public class OrderService {
         if(!requestedDrinks.isEmpty()) {
             drinkResponse = drinkService.sendOrder(requestedDrinks, order.getId());
         }
+
+        OrderModel finalOrder = order;
+        requestedItems.stream()
+                        .map(i -> this.convertOrderItemToDomain(i, finalOrder.getId()))
+                        .forEach(o -> orderItemRepository.save(o));
 
         // Is de bestelling geaccepteerd?
         if( foodResponse.getStatusCode().isSameCodeAs(HttpStatus.ACCEPTED) && drinkResponse.getStatusCode().isSameCodeAs(HttpStatus.ACCEPTED)){

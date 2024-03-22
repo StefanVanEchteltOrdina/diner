@@ -30,7 +30,7 @@ class OrderControllerIT extends BaseIT {
 
         RestTemplate restTemplate1 = new RestTemplate();
         ResponseEntity<List<MenuItem>> response = restTemplate1.exchange(
-                "http://localhost:8004/api/menu",
+                "http://localhost:8080/api/menu",
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<List<MenuItem>>() {}

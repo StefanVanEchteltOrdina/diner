@@ -18,6 +18,8 @@ public class BaseIT {
 
     protected MockRestServiceServer mockRestServiceServer;
 
+    protected final String localUrl = "http://localhost:8080";
+
     @BeforeEach
     public void setup() {
         this.mockRestServiceServer = MockRestServiceServer.bindTo(restTemplate).build();

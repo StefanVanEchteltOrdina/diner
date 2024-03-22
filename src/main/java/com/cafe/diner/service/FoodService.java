@@ -54,7 +54,7 @@ public class FoodService {
 
         Map<String, Object> payload = new HashMap<>();
         payload.put("items", requestedItems);
-        payload.put("orderId", orderId);
+        payload.put("orderid", orderId);
 
         return restTemplate.postForEntity(url, payload, Void.class);
     }

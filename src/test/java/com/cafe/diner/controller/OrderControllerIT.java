@@ -19,6 +19,7 @@ class OrderControllerIT extends BaseIT {
 
     @Test
     void validate_get_all_menu_items() throws Exception {
+        // Given
         mockRestServiceServer.expect(requestTo("http://localhost:8001/api/menu"))
                 .andExpect(method(HttpMethod.GET))
                 .andRespond(withSuccess("[{\"id\": \"1\", \"description\": \"drinkssss\",\"name\": \"drink\",\"price\": \"2\"}]", MediaType.APPLICATION_JSON));
@@ -27,7 +28,7 @@ class OrderControllerIT extends BaseIT {
                 .andExpect(method(HttpMethod.GET))
                 .andRespond(withSuccess("[{\"id\": \"2\", \"description\": \"foodddsss\",\"name\": \"food\",\"price\": \"3\"}]", MediaType.APPLICATION_JSON));
 
-
+        // When
         RestTemplate restTemplate1 = new RestTemplate();
         ResponseEntity<List<MenuItem>> response = restTemplate1.exchange(
                 localUrl + "/api/menu",
@@ -36,6 +37,7 @@ class OrderControllerIT extends BaseIT {
                 new ParameterizedTypeReference<List<MenuItem>>() {}
         );
 
+        // Then
         assertThat(response.getBody()).isNotNull();
         assertThat(response.getBody()).hasSize(2);
 
@@ -53,4 +55,7 @@ class OrderControllerIT extends BaseIT {
         assertThat(menuItem2.getPrice()).isEqualTo(3L);
         assertThat(menuItem2.getType()).isEqualTo(MenuItem.TypeEnum.DISH);
     }
+
+
+
 }

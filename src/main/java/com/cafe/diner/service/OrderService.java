@@ -92,32 +92,38 @@ public class OrderService {
 
     public ResponseEntity<ResponseOrder> placeOrder(List<RequestedItem> requestedItems){
         ResponseEntity<ResponseOrder> response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        ResponseEntity<Void> foodResponse = new ResponseEntity<>(HttpStatus.ACCEPTED);
-        ResponseEntity<Void> drinkResponse = new ResponseEntity<>(HttpStatus.ACCEPTED);
+        ResponseEntity<Void> foodResponse = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        ResponseEntity<Void> drinkResponse = new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-        //TODO: Orders opslaan
+        // Sla initieel de order op om een ID te genereren
         OrderModel order = new OrderModel();
         order.setStatus(Order.StatusEnum.INITIAL);
-        OrderModel orderModel = orderRepository.save(order);
-        long tempOrderId = 1;
+        order = orderRepository.save(order);
 
         //Dishes doorsturen naar cafe
         List<RequestedItem> requestedDishes = requestedItems.stream()
                 .filter(item -> item.getType() == RequestedItem.TypeEnum.DISH).toList();
         if(!requestedDishes.isEmpty()){
-            foodResponse = foodService.sendOrder(requestedDishes, tempOrderId);
+            foodResponse = foodService.sendOrder(requestedDishes, order.getId());
         }
 
         //Drinks doorsturen naar bar
         List<RequestedItem> requestedDrinks = requestedItems.stream()
                 .filter(item -> item.getType() == RequestedItem.TypeEnum.DRINK).toList();
         if(!requestedDrinks.isEmpty()) {
-            drinkResponse = drinkService.sendOrder(requestedDrinks, tempOrderId);
+            drinkResponse = drinkService.sendOrder(requestedDrinks, order.getId());
         }
 
+        // Is de bestelling geaccepteerd?
         if( foodResponse.getStatusCode().isSameCodeAs(HttpStatus.ACCEPTED) && drinkResponse.getStatusCode().isSameCodeAs(HttpStatus.ACCEPTED)){
             response = new ResponseEntity<>(HttpStatus.ACCEPTED);
+            order.setStatus(Order.StatusEnum.PREPARING);
         }
+
+        System.out.println(order.toString());
+
+        // Sla de order op in de DB
+        orderRepository.save(order);
 
         return response;
     }

@@ -86,6 +86,7 @@ public class OrderService {
 
         Order order =  new Order();
         order.setId(orderModel.getId());
+        order.setStatus(orderModel.getStatus());
         return order;
     }
 

@@ -1,6 +1,7 @@
 package com.cafe.diner.service;
 
 import com.cafe.diner.domain.OrderModel;
+import lombok.AllArgsConstructor;
 import org.openapitools.model.Order;
 import com.cafe.diner.repository.OrderRepository;
 import org.openapitools.model.RequestedItem;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class OrderService {
 
     private OrderRepository orderRepository;
@@ -95,7 +97,7 @@ public class OrderService {
         //TODO: Orders opslaan
         OrderModel order = new OrderModel();
         order.setStatus(Order.StatusEnum.INITIAL);
-        orderRepository.save(order);
+        OrderModel orderModel = orderRepository.save(order);
         long tempOrderId = 1;
 
         //Dishes doorsturen naar cafe

@@ -4,16 +4,15 @@ import com.cafe.diner.service.OrderService;
 import org.openapitools.api.ApiApi;
 import org.openapitools.model.Order;
 import org.openapitools.model.ResponseOrder;
+import org.openapitools.model.RequestedItem;
 import org.openapitools.model.Bill;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
@@ -34,7 +33,7 @@ public class OrderController implements ApiApi {
     }
 
     @PostMapping
-    public ResponseEntity<ResponseOrder> placeOrderUsingPOST() {
+    public ResponseEntity<ResponseOrder> placeOrderUsingPOST(@RequestBody RequestedItem requestedItem) {
         // TODO implement
 
         ResponseEntity response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -45,8 +44,14 @@ public class OrderController implements ApiApi {
     }
 
     @GetMapping("/{id}/bill")
-    public ResponseEntity<Bill> getBillUsingGET() {
-        // TODO implement
+    public ResponseEntity<Bill> getBillUsingGET(@PathVariable Long id) {
+        Optional<Order> order = orderService.find(id);
+
+        if (order.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        // TODO get bill
 
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }

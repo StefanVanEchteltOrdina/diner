@@ -2,7 +2,7 @@ package com.cafe.diner.controller;
 
 import com.cafe.diner.service.OrderService;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import jakarta.validation.Valid;
 import org.openapitools.api.ApiApi;
 import org.openapitools.model.Order;
 import org.openapitools.model.ResponseOrder;
@@ -23,6 +23,7 @@ public class OrderController implements ApiApi {
 
     private OrderService orderService;
 
+
     @GetMapping
     public ResponseEntity<List<Order>> getOrdersUsingGET() {
         List<Order> orders = orderService.getAll();
@@ -34,15 +35,12 @@ public class OrderController implements ApiApi {
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 
-    @PostMapping
-    public ResponseEntity<ResponseOrder> placeOrderUsingPOST(@RequestBody RequestedItem requestedItem) {
-        // TODO implement
+    @Override
+    public ResponseEntity<ResponseOrder> placeOrderUsingPOST(@Parameter(name = "requestedItems",
+            description = "the requested items food and drinks", required = true) @Valid @RequestBody List<@Valid RequestedItem> requestedItems
+    ) {
 
-        ResponseEntity response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        response = new ResponseEntity<>(HttpStatus.OK);
-        response = new ResponseEntity<>(HttpStatus.CREATED);
-
-        return response;
+        return orderService.placeOrder(requestedItems);
     }
 
     @GetMapping("/{id}/bill")
@@ -60,33 +58,15 @@ public class OrderController implements ApiApi {
 
     // TODO add push...
 
-    @Override
-    public ResponseEntity<Void> serveDishesUsingPOST(
-            @Parameter(name = "id", description = "order id", required = true, in = ParameterIn.PATH) @PathVariable("id") Long id
-    ) {
-        System.out.println("Serving dishes.");
-        boolean gelukt = orderService.serveDishes(id);
+    @PostMapping("/{id}/serve/dishes")
+    public void x4() {
+        // TODO implement
 
-        if (gelukt) {
-            return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
     }
 
-
-    @Override
-    public ResponseEntity<Void> serveDrinksUsingPOST(
-            @Parameter(name = "id", description = "order id", required = true, in = ParameterIn.PATH) @PathVariable("id") Long id
-    ) {
-        System.out.println("Serving drinks");
-        boolean gelukt = orderService.serveDrinks(id);
-
-        if (gelukt) {
-        return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    @PostMapping("/{id}/serve/drinks")
+    public void x5() {
+        // TODO implement
 
     }
 }

@@ -28,6 +28,33 @@ public class OrderService {
     }
 
 
+    public boolean serveDishes(long orderId) {
+
+        // TODO implement
+        // Check dat de order bestaat
+        if (false) {
+            return false;
+        }
+        // pas order in DB aan dat het eten uitgeserveerd is
+        // als de drankjes al uitgeserveerd zijn, óf er zijn geen drankjes besteld,
+        // dan gaat de status naar Billing
+        return true;
+    }
+
+    public boolean serveDrinks(long orderId) {
+
+        // TODO implement
+        // Check dat de order bestaat
+        if (false) {
+            return false;
+        }
+        // pas order in DB aan dat het drinken uitgeserveerd is
+        // als het eten al uitgeserveerd is, óf er is geen eten besteld,
+        // dan gaat de status naar Billing
+        return true;
+    }
+
+
     private Order convert(OrderModel orderModel) {
         // Todo: uitbreiden met alle velden.
 

@@ -1,6 +1,8 @@
 package com.cafe.diner.controller;
 
 import com.cafe.diner.service.OrderService;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import org.openapitools.api.ApiApi;
 import org.openapitools.model.Order;
 import org.openapitools.model.ResponseOrder;
@@ -58,15 +60,39 @@ public class OrderController implements ApiApi {
 
     // TODO add push...
 
-    @PostMapping("/{id}/serve/dishes")
-    public void x4() {
-        // TODO implement
+    @RequestMapping(
+            method = RequestMethod.POST,
+            value = "/api/order/{id}/serve/dishes"
+    )
+    public ResponseEntity<Void> serveDishesUsingPOST(
+            @Parameter(name = "id", description = "order id", required = true, in = ParameterIn.PATH) @PathVariable("id") Long id
+    ) {
+        System.out.println("Serving dishes.");
+        boolean gelukt = orderService.serveDishes(id);
 
+        if (gelukt) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
-    @PostMapping("/{id}/serve/drinks")
-    public void x5() {
-        // TODO implement
+
+    @RequestMapping(
+            method = RequestMethod.POST,
+            value = "/api/order/{id}/serve/drinks"
+    )
+    public ResponseEntity<Void> serveDrinksUsingPOST(
+            @Parameter(name = "id", description = "order id", required = true, in = ParameterIn.PATH) @PathVariable("id") Long id
+    ) {
+        System.out.println("Serving drinks");
+        boolean gelukt = orderService.serveDrinks(id);
+
+        if (gelukt) {
+        return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
 
     }
 }

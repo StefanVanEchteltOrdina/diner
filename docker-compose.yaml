@@ -1,0 +1,22 @@
+services:
+  kitchen:
+    container_name: kitchen
+    image: dotbinh/kitchen-app:latest
+    ports:
+      - 8001:8001
+  diner:
+    container_name: diner
+    environment:
+      - DINER_KITCHEN_URL=http://kitchen:8001
+      - DINER_BAR_URL=http://bar:8080
+    image: rwsen/diner-image:latest
+    depends_on:
+      - kitchen
+      - bar
+    ports:
+      - 8080:8080
+  bar:
+    container_name: bar
+    image: nahoo408/bar_app:0.6
+    ports:
+      - 8002:8080

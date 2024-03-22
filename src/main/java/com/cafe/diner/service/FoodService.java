@@ -24,7 +24,9 @@ public class FoodService {
     private RestTemplate restTemplate;
 
     public List<MenuItem> all() {
-        String url = dinerConfig.getKitchenUrl() + "/api/menu";
+        System.out.println("Get menu from kitchen");
+
+        String url = dinerConfig.getKitchenUrl() + "/api/menu/";
 
         ResponseEntity<List<ExternalMenuItem>> response = restTemplate.exchange(
                 url,
@@ -50,7 +52,8 @@ public class FoodService {
     }
 
     public ResponseEntity<Void> sendOrder(List<RequestedItem> requestedItems, long orderId ){
-        String url = dinerConfig.getKitchenUrl() + "/api/order";
+        System.out.println("Send order to kitchen");
+        String url = dinerConfig.getKitchenUrl() + "/api/order/";
 
         Map<String, Object> payload = new HashMap<>();
         payload.put("items", requestedItems);

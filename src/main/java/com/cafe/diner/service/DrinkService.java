@@ -25,6 +25,7 @@ public class DrinkService {
     private RestTemplate restTemplate;
 
     public List<MenuItem> all() {
+        System.out.println("Get menu from bar");
 
         String url = dinerConfig.getBarUrl() + "/api/menu";
 
@@ -53,6 +54,7 @@ public class DrinkService {
     }
 
     public ResponseEntity<Void> sendOrder(List<RequestedItem> requestedItems, long orderId ){
+        System.out.println("Send order to bar");
         String url = dinerConfig.getBarUrl() + "/api/order";
 
         Map<String, Object> payload = new HashMap<>();

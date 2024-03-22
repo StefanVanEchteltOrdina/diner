@@ -1,13 +1,12 @@
 package com.cafe.diner.controller;
 
+import com.cafe.diner.service.MenuService;
 import com.cafe.diner.service.OrderService;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import jakarta.validation.Valid;
 import org.openapitools.api.ApiApi;
-import org.openapitools.model.Order;
-import org.openapitools.model.ResponseOrder;
-import org.openapitools.model.RequestedItem;
-import org.openapitools.model.Bill;
+import org.openapitools.model.*;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,14 +17,26 @@ import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/order")
 public class OrderController implements ApiApi {
 
     private OrderService orderService;
+    private MenuService menuService;
 
+    @Override
+    public ResponseEntity<List<MenuItem>> getMenuUsingGET() {
+        List<MenuItem> menuItems = menuService.all();
 
-    @GetMapping
-    public ResponseEntity<List<Order>> getOrdersUsingGET() {
+        if (menuItems.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(menuService.all(), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<List<Order>> getOrdersUsingGET(
+
+    ) {
         List<Order> orders = orderService.getAll();
 
         if (orders.isEmpty()) {
@@ -36,15 +47,22 @@ public class OrderController implements ApiApi {
     }
 
     @Override
-    public ResponseEntity<ResponseOrder> placeOrderUsingPOST(@Parameter(name = "requestedItems",
-            description = "the requested items food and drinks", required = true) @Valid @RequestBody List<@Valid RequestedItem> requestedItems
+    public ResponseEntity<ResponseOrder> placeOrderUsingPOST(
+            @Parameter(name = "requestedItems", description = "the requested items food and drinks", required = true) @Valid @RequestBody List<@Valid RequestedItem> requestedItems
     ) {
+        // TODO implement
 
-        return orderService.placeOrder(requestedItems);
+        ResponseEntity response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        response = new ResponseEntity<>(HttpStatus.OK);
+        response = new ResponseEntity<>(HttpStatus.CREATED);
+
+        return response;
     }
 
-    @GetMapping("/{id}/bill")
-    public ResponseEntity<Bill> getBillUsingGET(@PathVariable Long id) {
+    @Override
+    public ResponseEntity<Bill> getBillUsingGET(
+            @Parameter(name = "id", description = "order id", required = true, in = ParameterIn.PATH) @PathVariable("id") Long id
+    ) {
         Optional<Order> order = orderService.find(id);
 
         if (order.isEmpty()) {
@@ -58,15 +76,33 @@ public class OrderController implements ApiApi {
 
     // TODO add push...
 
-    @PostMapping("/{id}/serve/dishes")
-    public void x4() {
-        // TODO implement
+    @Override
+    public ResponseEntity<Void> serveDishesUsingPOST(
+            @Parameter(name = "id", description = "order id", required = true, in = ParameterIn.PATH) @PathVariable("id") Long id
+    ) {
+        System.out.println("Serving dishes.");
+        boolean gelukt = orderService.serveDishes(id);
 
+        if (gelukt) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
-    @PostMapping("/{id}/serve/drinks")
-    public void x5() {
-        // TODO implement
+
+    @Override
+    public ResponseEntity<Void> serveDrinksUsingPOST(
+            @Parameter(name = "id", description = "order id", required = true, in = ParameterIn.PATH) @PathVariable("id") Long id
+    ) {
+        System.out.println("Serving drinks");
+        boolean gelukt = orderService.serveDrinks(id);
+
+        if (gelukt) {
+        return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
 
     }
 }

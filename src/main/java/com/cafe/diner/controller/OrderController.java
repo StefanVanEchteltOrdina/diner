@@ -50,13 +50,7 @@ public class OrderController implements ApiApi {
     public ResponseEntity<ResponseOrder> placeOrderUsingPOST(
             @Parameter(name = "requestedItems", description = "the requested items food and drinks", required = true) @Valid @RequestBody List<@Valid RequestedItem> requestedItems
     ) {
-        // TODO implement
-
-        ResponseEntity response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        response = new ResponseEntity<>(HttpStatus.OK);
-        response = new ResponseEntity<>(HttpStatus.CREATED);
-
-        return response;
+        return orderService.placeOrder(requestedItems);
     }
 
     @Override

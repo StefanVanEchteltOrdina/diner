@@ -4,6 +4,7 @@ import com.cafe.diner.domain.OrderItemModel;
 import com.cafe.diner.domain.OrderModel;
 import com.cafe.diner.repository.OrderItemRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.openapitools.model.Order;
 import com.cafe.diner.repository.OrderRepository;
 import org.openapitools.model.OrderItem;
@@ -18,6 +19,7 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class OrderService {
 
     private OrderRepository orderRepository;
@@ -143,14 +145,20 @@ public class OrderService {
 
         // Is de bestelling geaccepteerd?
         if( foodResponse.getStatusCode().isSameCodeAs(HttpStatus.ACCEPTED) && drinkResponse.getStatusCode().isSameCodeAs(HttpStatus.ACCEPTED)){
-            response = new ResponseEntity<>(HttpStatus.ACCEPTED);
             order.setStatus(Order.StatusEnum.PREPARING);
+
+            // Sla de order op in de DB
+            orderRepository.save(order);
+
+            ResponseOrder responseOrder = new ResponseOrder();
+
+            responseOrder.setBillUrl("/api/order/"+order.getId()+"/bill");
+            responseOrder.setOrderid(order.getId());
+
+            response = new ResponseEntity<>(responseOrder, HttpStatus.ACCEPTED);
         }
 
-        System.out.println(order.toString());
-
-        // Sla de order op in de DB
-        orderRepository.save(order);
+        log.info(order.toString());
 
         return response;
     }

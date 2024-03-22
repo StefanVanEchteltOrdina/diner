@@ -5,8 +5,6 @@ import com.cafe.diner.service.MenuService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -14,12 +12,11 @@ import org.openapitools.api.ApiApi;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/menu")
 public class MenuController implements ApiApi {
 
     private MenuService menuService;
 
-    @GetMapping
+    @Override
     public ResponseEntity<List<MenuItem>> getMenuUsingGET() {
         List<MenuItem> menuItems = menuService.all();
 

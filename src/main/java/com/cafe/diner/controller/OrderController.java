@@ -30,7 +30,7 @@ public class OrderController implements ApiApi {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<>(menuService.all(), HttpStatus.OK);
+        return new ResponseEntity<>(menuItems, HttpStatus.OK);
     }
 
     @Override

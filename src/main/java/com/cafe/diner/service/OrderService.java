@@ -114,8 +114,8 @@ public class OrderService {
 
     public ResponseEntity<ResponseOrder> placeOrder(List<RequestedItem> requestedItems){
         ResponseEntity<ResponseOrder> response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        ResponseEntity<Void> foodResponse = new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        ResponseEntity<Void> drinkResponse = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        ResponseEntity<Void> foodResponse = new ResponseEntity<>(HttpStatus.ACCEPTED);
+        ResponseEntity<Void> drinkResponse = new ResponseEntity<>(HttpStatus.ACCEPTED);
 
         // Sla initieel de order op om een ID te genereren
         OrderModel order = new OrderModel();

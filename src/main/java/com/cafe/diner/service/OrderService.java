@@ -93,6 +93,9 @@ public class OrderService {
         ResponseEntity<Void> drinkResponse = new ResponseEntity<>(HttpStatus.ACCEPTED);
 
         //TODO: Orders opslaan
+        OrderModel order = new OrderModel();
+        order.setStatus(Order.StatusEnum.INITIAL);
+        orderRepository.save(order);
         long tempOrderId = 1;
 
         //Dishes doorsturen naar cafe

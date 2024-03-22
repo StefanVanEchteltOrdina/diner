@@ -60,10 +60,7 @@ public class OrderController implements ApiApi {
 
     // TODO add push...
 
-    @RequestMapping(
-            method = RequestMethod.POST,
-            value = "/api/order/{id}/serve/dishes"
-    )
+    @Override
     public ResponseEntity<Void> serveDishesUsingPOST(
             @Parameter(name = "id", description = "order id", required = true, in = ParameterIn.PATH) @PathVariable("id") Long id
     ) {
@@ -78,10 +75,7 @@ public class OrderController implements ApiApi {
     }
 
 
-    @RequestMapping(
-            method = RequestMethod.POST,
-            value = "/api/order/{id}/serve/drinks"
-    )
+    @Override
     public ResponseEntity<Void> serveDrinksUsingPOST(
             @Parameter(name = "id", description = "order id", required = true, in = ParameterIn.PATH) @PathVariable("id") Long id
     ) {

@@ -1,7 +1,6 @@
 package com.cafe.diner.service;
 
 import com.cafe.diner.domain.OrderModel;
-import org.aspectj.weaver.ast.Or;
 import org.openapitools.model.Order;
 import com.cafe.diner.repository.OrderRepository;
 import org.springframework.stereotype.Service;
@@ -30,27 +29,46 @@ public class OrderService {
 
     public boolean serveDishes(long orderId) {
 
-        // TODO implement
         // Check dat de order bestaat
-        if (false) {
+        if (orderRepository.findById(orderId).isEmpty()) {
             return false;
         }
+
+        OrderModel order = orderRepository.findById(orderId).get();
+
         // pas order in DB aan dat het eten uitgeserveerd is
         // als de drankjes al uitgeserveerd zijn, óf er zijn geen drankjes besteld,
         // dan gaat de status naar Billing
+        if (order.getStatus() == Order.StatusEnum.DRINK_SERVED)
+        {
+            order.setStatus(Order.StatusEnum.BILLING);
+        } else {
+            order.setStatus(Order.StatusEnum.FOOD_SERVED);
+        }
+        orderRepository.save(order);
         return true;
     }
 
     public boolean serveDrinks(long orderId) {
 
-        // TODO implement
         // Check dat de order bestaat
-        if (false) {
+        if (orderRepository.findById(orderId).isEmpty()) {
             return false;
         }
+
+        OrderModel order = orderRepository.findById(orderId).get();
+
         // pas order in DB aan dat het drinken uitgeserveerd is
         // als het eten al uitgeserveerd is, óf er is geen eten besteld,
         // dan gaat de status naar Billing
+
+        if (order.getStatus() == Order.StatusEnum.FOOD_SERVED)
+        {
+            order.setStatus(Order.StatusEnum.BILLING);
+        } else {
+            order.setStatus(Order.StatusEnum.DRINK_SERVED);
+        }
+        orderRepository.save(order);
         return true;
     }
 

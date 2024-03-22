@@ -88,23 +88,30 @@ public class OrderService {
     }
 
     public ResponseEntity<ResponseOrder> placeOrder(List<RequestedItem> requestedItems){
-        ResponseEntity response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        ResponseEntity<ResponseOrder> response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        ResponseEntity<Void> foodResponse = new ResponseEntity<>(HttpStatus.ACCEPTED);
+        ResponseEntity<Void> drinkResponse = new ResponseEntity<>(HttpStatus.ACCEPTED);
 
         //TODO: Orders opslaan
         long tempOrderId = 1;
 
         //Dishes doorsturen naar cafe
         List<RequestedItem> requestedDishes = requestedItems.stream()
-                .filter(item -> item.getType() == RequestedItem.TypeEnum.DISH)
-                .toList();
-        ResponseEntity foodResponse = foodService.sendOrder(requestedDishes, tempOrderId);
+                .filter(item -> item.getType() == RequestedItem.TypeEnum.DISH).toList();
+        if(!requestedDishes.isEmpty()){
+            foodResponse = foodService.sendOrder(requestedDishes, tempOrderId);
+        }
 
         //Drinks doorsturen naar bar
         List<RequestedItem> requestedDrinks = requestedItems.stream()
-                .filter(item -> item.getType() == RequestedItem.TypeEnum.DRINK)
-                .toList();
+                .filter(item -> item.getType() == RequestedItem.TypeEnum.DRINK).toList();
+        if(!requestedDrinks.isEmpty()) {
+            drinkResponse = drinkService.sendOrder(requestedDrinks, tempOrderId);
+        }
 
-        ResponseEntity drinkResponse = drinkService.sendOrder(requestedDrinks, tempOrderId);
+        if( foodResponse.getStatusCode().isSameCodeAs(HttpStatus.ACCEPTED) && drinkResponse.getStatusCode().isSameCodeAs(HttpStatus.ACCEPTED)){
+            response = new ResponseEntity<>(HttpStatus.ACCEPTED);
+        }
 
         return response;
     }

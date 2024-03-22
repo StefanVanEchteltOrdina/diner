@@ -1,9 +1,12 @@
 package com.cafe.diner.service;
 
 import com.cafe.diner.domain.OrderModel;
-import org.aspectj.weaver.ast.Or;
 import org.openapitools.model.Order;
 import com.cafe.diner.repository.OrderRepository;
+import org.openapitools.model.RequestedItem;
+import org.openapitools.model.ResponseOrder;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +16,8 @@ import java.util.Optional;
 public class OrderService {
 
     private OrderRepository orderRepository;
+    private DrinkService drinkService;
+    private FoodService foodService;
 
     public List<Order> getAll() {
         return orderRepository.findAll()
@@ -61,5 +66,27 @@ public class OrderService {
         Order order =  new Order();
         order.setId(orderModel.getId());
         return order;
+    }
+
+    public ResponseEntity<ResponseOrder> placeOrder(List<RequestedItem> requestedItems){
+        ResponseEntity response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        //TODO: Orders opslaan
+        long tempOrderId = 1;
+
+        //Dishes doorsturen naar cafe
+        List<RequestedItem> requestedDishes = requestedItems.stream()
+                .filter(item -> item.getType() == RequestedItem.TypeEnum.DISH)
+                .toList();
+        ResponseEntity foodResponse = foodService.sendOrder(requestedDishes, tempOrderId);
+
+        //Drinks doorsturen naar bar
+        List<RequestedItem> requestedDrinks = requestedItems.stream()
+                .filter(item -> item.getType() == RequestedItem.TypeEnum.DRINK)
+                .toList();
+
+        ResponseEntity drinkResponse = drinkService.sendOrder(requestedDrinks, tempOrderId);
+
+        return response;
     }
 }

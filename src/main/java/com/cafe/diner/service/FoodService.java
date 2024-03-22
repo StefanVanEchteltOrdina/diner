@@ -4,6 +4,7 @@ import com.cafe.diner.config.DinerConfig;
 import com.cafe.diner.external.ExternalMenuItem;
 import lombok.AllArgsConstructor;
 import org.openapitools.model.MenuItem;
+import org.openapitools.model.RequestedItem;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @AllArgsConstructor
@@ -44,5 +47,15 @@ public class FoodService {
                     menuItem.setType(MenuItem.TypeEnum.DISH);
                     return menuItem;
             }).toList();
+    }
+
+    public ResponseEntity<Void> sendOrder(List<RequestedItem> requestedItems, long orderId ){
+        String url = dinerConfig.getKitchenUrl() + "/api/order";
+
+        Map<String, Object> payload = new HashMap<>();
+        payload.put("items", requestedItems);
+        payload.put("orderId", orderId);
+
+        return restTemplate.postForEntity(url, payload, Void.class);
     }
 }

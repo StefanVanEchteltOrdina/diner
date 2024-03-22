@@ -2,6 +2,7 @@ package com.cafe.diner.controller;
 
 import com.cafe.diner.service.MenuService;
 import com.cafe.diner.service.OrderService;
+import com.cafe.diner.service.PaymentService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import jakarta.validation.Valid;
@@ -20,6 +21,7 @@ import java.util.Optional;
 public class OrderController implements ApiApi {
 
     private OrderService orderService;
+    private PaymentService paymentService;
     private MenuService menuService;
 
     @Override
@@ -57,15 +59,13 @@ public class OrderController implements ApiApi {
     public ResponseEntity<Bill> getBillUsingGET(
             @Parameter(name = "id", description = "order id", required = true, in = ParameterIn.PATH) @PathVariable("id") Long id
     ) {
-        Optional<Order> order = orderService.find(id);
+        Bill bill = paymentService.getBillOrderId(id);
 
-        if (order.isEmpty()) {
+        if (bill == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        // TODO get bill
-
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(bill, HttpStatus.OK);
     }
 
     // TODO add push...
